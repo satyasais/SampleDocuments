@@ -211,4 +211,85 @@ public class ReflectionSingletonTest {
 }
 
 7. Enum Singleton
+package com.journaldev.singleton;
+
+public enum EnumSingleton {
+
+    INSTANCE;
+
+    public static void doSomething() {
+        // do something
+    }
+}
 8. Serialization and Singleton
+
+package com.journaldev.singleton;
+
+import java.io.Serializable;
+
+public class SerializedSingleton implements Serializable {
+
+    private static final long serialVersionUID = -7604766932017737115L;
+
+    private SerializedSingleton(){}
+
+    private static class SingletonHelper {
+        private static final SerializedSingleton instance = new SerializedSingleton();
+    }
+
+    public static SerializedSingleton getInstance() {
+        return SingletonHelper.instance;
+    }
+
+}
+
+package com.journaldev.singleton;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+
+public class SingletonSerializedTest {
+
+    public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException {
+        SerializedSingleton instanceOne = SerializedSingleton.getInstance();
+        ObjectOutput out = new ObjectOutputStream(new FileOutputStream(
+                "filename.ser"));
+        out.writeObject(instanceOne);
+        out.close();
+
+        // deserialize from file to object
+        ObjectInput in = new ObjectInputStream(new FileInputStream(
+                "filename.ser"));
+        SerializedSingleton instanceTwo = (SerializedSingleton) in.readObject();
+        in.close();
+
+        System.out.println("instanceOne hashCode="+instanceOne.hashCode());
+        System.out.println("instanceTwo hashCode="+instanceTwo.hashCode());
+
+    }
+
+}
+
+2. Factory Pattern
+The factory design pattern is used when we have a superclass with multiple subclasses and based on input, we need to return one of the subclasses. This pattern takes out the responsibility of the instantiation of a Class from the client program to the factory class. We can apply a singleton pattern on the factory class or make the factory method static.
+
+Some important points about Factory Design Pattern method are;
+
+We can keep Factory class Singleton or we can keep the method that returns the subclass as static.
+Notice that based on the input parameter, different subclass is created and returned. getComputer is the factory method.
+
+Factory Design Pattern Examples in JDK
+java.util.Calendar, ResourceBundle and NumberFormat getInstance() methods uses Factory pattern.
+valueOf() method in wrapper classes like Boolean, Integer etc.
+
+3. Abstract Factory Pattern
+The abstract factory pattern is similar to the factory pattern and is a factory of factories. If you are familiar with the factory design pattern in Java, you will notice that we have a single factory class that returns the different subclasses based on the input provided and the factory class uses if-else or switch statements to achieve this. In the abstract factory pattern, we get rid of if-else block and have a factory class for each subclass and then an abstract factory class that will return the subclass based on the input factory class.
+
+
+
