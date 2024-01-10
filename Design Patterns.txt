@@ -1,0 +1,214 @@
+Design Patterns
+Java Design Patterns
+1) Creational Pattern
+
+Factory Method Pattern
+Abstract Factory Pattern
+Singleton Pattern
+Prototype Pattern
+Builder Pattern
+Object Pool Pattern
+
+2) Structural Pattern
+
+Adapter Pattern
+Bridge Pattern
+Composite Pattern
+Decorator Pattern
+Facade Pattern
+Flyweight Pattern
+proxy Pattern
+
+3) Behavioral Pattern
+
+Chain of Responsibility
+Command Pattern
+Interpreter Pattern
+Iterator Pattern
+Mediator Pattern
+Memento Pattern
+Observer Pattern
+State Pattern
+Strategy Pattern
+Template Pattern
+
+J2EE Patterns
+
+JEE or J2EE Patterns
+
+Presentation Layer
+
+Intercepting Filter Pattern
+Front Controller Pattern
+.
+
+
+Advantage of design pattern:
+They are reusable in multiple projects.
+They provide the solutions that help to define the system architecture.
+They capture the software engineering experiences.
+They provide transparency to the design of an application.
+They are well-proved and testified solutions since they have been built upon the knowledge and experience of expert software developers.
+Design patterns don?t guarantee an absolute solution to a problem. They provide clarity to the system architecture and the possibility of building a better system.
+When should we use the design patterns?
+We must use the design patterns during the analysis and requirement phase of SDLC(Software Development Life Cycle).
+
+
+
+Creational Design Patterns
+Creational design patterns provide solutions to instantiate an Object in the best possible way for specific situations.
+
+1. Singleton Pattern
+The singleton pattern restricts the instantiation of a Class and ensures that only one instance of the class exists in the Java Virtual Machine. The implementation of the singleton pattern has always been a controversial topic among developers
+
+Java Singleton Pattern Implementation
+To implement a singleton pattern, we have different approaches, but all of them have the following common concepts.
+
+Private constructor to restrict instantiation of the class from other classes.
+Private static variable of the same class that is the only instance of the class.
+Public static method that returns the instance of the class, this is the global access point for the outer world to get the instance of the singleton class.
+
+1. Eager initialization
+2. Static block initialization
+3. Lazy Initialization
+4. Thread Safe Singleton
+5. Bill Pugh Singleton Implementation
+6. Using Reflection to destroy Singleton Pattern
+7. Enum Singleton
+8. Serialization and Singleton
+
+1. Eager initialization:
+
+package com.journaldev.singleton;
+
+public class EagerInitializedSingleton {
+
+    private static final EagerInitializedSingleton instance = new EagerInitializedSingleton();
+
+    // private constructor to avoid client applications using the constructor
+    private EagerInitializedSingleton(){}
+
+    public static EagerInitializedSingleton getInstance() {
+        return instance;
+    }
+}
+
+2. Static block initialization:
+
+package com.journaldev.singleton;
+
+public class StaticBlockSingleton {
+
+    private static StaticBlockSingleton instance;
+
+    private StaticBlockSingleton(){}
+
+    // static block initialization for exception handling
+    static {
+        try {
+            instance = new StaticBlockSingleton();
+        } catch (Exception e) {
+            throw new RuntimeException("Exception occurred in creating singleton instance");
+        }
+    }
+
+    public static StaticBlockSingleton getInstance() {
+        return instance;
+    }
+}
+
+3. Lazy Initialization:
+
+package com.journaldev.singleton;
+
+public class LazyInitializedSingleton {
+
+    private static LazyInitializedSingleton instance;
+
+    private LazyInitializedSingleton(){}
+
+    public static LazyInitializedSingleton getInstance() {
+        if (instance == null) {
+            instance = new LazyInitializedSingleton();
+        }
+        return instance;
+    }
+}
+
+4. Thread Safe Singleton:
+
+package com.journaldev.singleton;
+
+public class ThreadSafeSingleton {
+
+    private static ThreadSafeSingleton instance;
+
+    private ThreadSafeSingleton(){}
+
+    public static synchronized ThreadSafeSingleton getInstance() {
+        if (instance == null) {
+            instance = new ThreadSafeSingleton();
+        }
+        return instance;
+    }
+
+}
+
+public static ThreadSafeSingleton getInstanceUsingDoubleLocking() {
+    if (instance == null) {
+        synchronized (ThreadSafeSingleton.class) {
+            if (instance == null) {
+                instance = new ThreadSafeSingleton();
+            }
+        }
+    }
+    return instance;
+}
+
+5. Bill Pugh Singleton Implementation:
+
+package com.journaldev.singleton;
+
+public class BillPughSingleton {
+
+    private BillPughSingleton(){}
+
+    private static class SingletonHelper {
+        private static final BillPughSingleton INSTANCE = new BillPughSingleton();
+    }
+
+    public static BillPughSingleton getInstance() {
+        return SingletonHelper.INSTANCE;
+    }
+}
+
+6. Using Reflection to destroy Singleton Pattern:
+
+package com.journaldev.singleton;
+
+import java.lang.reflect.Constructor;
+
+public class ReflectionSingletonTest {
+
+    public static void main(String[] args) {
+        EagerInitializedSingleton instanceOne = EagerInitializedSingleton.getInstance();
+        EagerInitializedSingleton instanceTwo = null;
+        try {
+            Constructor[] constructors = EagerInitializedSingleton.class.getDeclaredConstructors();
+            for (Constructor constructor : constructors) {
+                // This code will destroy the singleton pattern
+                constructor.setAccessible(true);
+                instanceTwo = (EagerInitializedSingleton) constructor.newInstance();
+                break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(instanceOne.hashCode());
+        System.out.println(instanceTwo.hashCode());
+    }
+
+}
+
+7. Enum Singleton
+8. Serialization and Singleton
